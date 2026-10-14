@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Equations Step-by-Step Practice</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Inter & Fira Code Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- MathJax Library for Dynamic Math Rendering -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-mono-math {
+            font-family: 'Fira Code', monospace;
+        }
+        
+        /* Step Entrance Animation */
+        @keyframes slideDownFade {
+            0% { opacity: 0; transform: translateY(-8px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-step-enter {
+            animation: slideDownFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Math Fraction Styling */
+        .math-fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            padding: 0 4px;
+        }
+        .math-numerator {
+            border-bottom: 2px solid currentColor;
+            padding-bottom: 2px;
+            line-height: 1.1;
+        }
+        .math-denominator {
+            padding-top: 2px;
+            line-height: 1.1;
+        }
+
+        /* High Contrast Theme Styles */
+        [data-theme="contrast"] {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+        [data-theme="contrast"] .bg-card {
+            background-color: #121212 !important;
+            border: 2px solid #ffffff !important;
+        }
+
+        /* Print Media Styles for Summary Report */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .shadow-lg, .shadow-md, .shadow-sm {
+                box-shadow: none !important;
+            }
+            .border {
+                border-color: #000 !important;
+            }
+        }
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Sticky Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-b border-slate-200 dark:border-slate-700 no-print shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- App Title / Brand -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center font-black text-xl shadow-md">
+                    2x
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold leading-tight">Linear Eq Solver</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Step-by-Step Practice</p>
+                </div>
+            </div>
+
+            <!-- Student Profile Badge (Visible during active practice) -->
+            <div id="header-student-badge" class="hidden md:flex items-center space-x-4 bg-slate-100 dark:bg-slate-700/50 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600">
+                <div class="text-xs">
+                    <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Student</span>
+                    <span id="nav-student-name" class="font-semibold text-slate-700 dark:text-slate-200">-</span>
+                </div>
+                <div class="h-6 w-px bg-slate-300 dark:bg-slate-600"></div>
+                <div class="text-xs">
+                    <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Class / Roll</span>
+                    <span id="nav-student-class" class="font-semibold text-slate-700 dark:text-slate-200">-</span>
+                </div>
+            </div>
+
+            <!-- Live Stats & Theme Controls -->
+            <div class="flex items-center space-x-3">
+                <!-- Progress & Score Indicators -->
+                <div id="header-stats" class="hidden flex items-center space-x-3 text-sm font-semibold">
+                    <div class="bg-brand-50 dark:bg-brand-700/20 text-brand-700 dark:text-brand-300 px-3 py-1 rounded-full border border-brand-200 dark:border-brand-700/30">
+                        <span id="nav-progress">Q 1/10</span>
+                    </div>
+                    <div class="bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-700/30 flex items-center space-x-1">
+                        <span>⭐</span>
+                        <span id="nav-score">0 pts</span>
+                    </div>
+                    <div class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1 rounded-full font-mono text-xs">
+                        ⏱️ <span id="nav-timer">00:00</span>
+                    </div>
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition" title="Toggle Theme">
+                    🌙
+                </button>
+
+                <!-- Change Student / Restart Button -->
+                <button id="restart-btn" onclick="confirmRestart()" class="hidden text-xs bg-rose-50 hover:bg-rose-100 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 px-3 py-1.5 rounded-lg border border-rose-200 dark:border-rose-800 transition">
+                    Restart / Profile
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Application Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- SCREEN 1: Registration Form -->
+        <section id="screen-registration" class="max-w-md mx-auto my-8 bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 font-bold">
+                    📝
+                </div>
+                <h2 class="text-2xl font-bold">Student Registration</h2>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Enter your details to begin your algebra practice session</p>
+            </div>
+
+            <form id="registration-form" onsubmit="handleRegistration(event)" class="space-y-4">
+                <div>
+                    <label for="reg-name" class="block text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1">Full Name *</label>
+                    <input type="text" id="reg-name" required placeholder="e.g. Alex Tan" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 outline-none transition">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="reg-class" class="block text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1">Class / Grade *</label>
+                        <input type="text" id="reg-class" required placeholder="e.g. Sec 1A" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 outline-none transition">
+                    </div>
+                    <div>
+                        <label for="reg-roll" class="block text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1">Class / Roll No. *</label>
+                        <input type="number" id="reg-roll" min="1" max="99" required placeholder="e.g. 15" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 outline-none transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="reg-difficulty" class="block text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 mb-1">Difficulty Level</label>
+                    <select id="reg-difficulty" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 outline-none transition">
+                        <option value="easy">Easy (Positive integers, standard forms)</option>
+                        <option value="medium" selected>Medium (Includes brackets & variable on right)</option>
+                        <option value="hard">Hard (Brackets, fraction forms, negative values)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-500/30 transition transform active:scale-95">
+                    Start Practice Session 🚀
+                </button>
+            </form>
+        </section>
+
+        <!-- SCREEN 2: Main Equation Workspace Screen -->
+        <section id="screen-practice" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Left 2 Columns: Equation Workspace & Guided Step Cards -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- Card A: Original Equation & Prominent Working Steps Stack -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-200 dark:border-slate-700 relative overflow-hidden space-y-4">
+                    <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-slate-400">
+                        <span id="equation-family-tag">Family A — Two-term, one side</span>
+                        <span id="equation-difficulty-tag" class="px-2 py-0.5 rounded bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">Medium</span>
+                    </div>
+
+                    <!-- Original Starting Equation -->
+                    <div class="p-4 sm:p-5 rounded-xl bg-slate-50 dark:bg-slate-700/40 border border-slate-200 dark:border-slate-600 text-center">
+                        <div class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 mb-1">Original Equation</div>
+                        <div id="math-equation-display" class="text-3xl sm:text-4xl font-extrabold text-slate-800 dark:text-slate-100 font-mono-math flex items-center justify-center min-h-[50px]">
+                            <!-- Math expression HTML injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Prominent Transformed Equations Stack -->
+                    <div class="pt-2 border-t border-slate-100 dark:border-slate-700 space-y-2">
+                        <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                            <span>Step-by-Step Transformed Working</span>
+                            <span id="stack-count-badge" class="text-brand-600 dark:text-brand-400">0 transformations</span>
+                        </div>
+                        <div id="working-steps-stack" class="space-y-3 pt-1">
+                            <!-- Dynamically populated transformed equations -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card B: Guided Step Interactive Card -->
+                <div id="step-interactive-card" class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-200 dark:border-slate-700 space-y-6">
+
+                    <!-- STAGE 1: Choose First Operation -->
+                    <div id="stage-1-container" class="space-y-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-7 h-7 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold">1</span>
+                            <h3 class="font-bold text-lg">Step 1: Choose the First Operation</h3>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">What is the best operation to perform first to isolate <span class="font-bold font-mono">x</span>?</p>
+
+                        <!-- Multiple Choice Options -->
+                        <div id="stage-1-options" class="space-y-2">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- STAGE 2 / 3: Perform Intermediate Step Equation Entry -->
+                    <div id="stage-2-container" class="hidden space-y-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-7 h-7 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold" id="step-number-badge">2</span>
+                            <h3 class="font-bold text-lg" id="stage-2-title">Step 2: Perform the Operation</h3>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300" id="stage-2-prompt">Perform the selected operation and enter the resulting simplified equation below:</p>
+
+                        <!-- Intermediate Equation Input Form -->
+                        <div class="space-y-3">
+                            <div class="relative">
+                                <input type="text" id="intermediate-step-input" placeholder="e.g. 3x = 15" class="w-full px-4 py-3 text-lg font-mono-math rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:border-brand-500 outline-none transition pr-12">
+                                <button onclick="clearStepInput()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
+                            </div>
+
+                            <!-- Mobile Virtual Math Keypad -->
+                            <div class="p-2 bg-slate-100 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600">
+                                <div class="text-[11px] font-semibold text-slate-400 uppercase mb-1 px-1">Virtual Keypad</div>
+                                <div class="grid grid-cols-6 gap-1 sm:gap-2">
+                                    <button type="button" onclick="keypadInsert('+')" class="py-2 rounded bg-white dark:bg-slate-600 font-bold shadow-sm hover:bg-slate-200 dark:hover:bg-slate-500">+</button>
+                                    <button type="button" onclick="keypadInsert('-')" class="py-2 rounded bg-white dark:bg-slate-600 font-bold shadow-sm hover:bg-slate-200 dark:hover:bg-slate-500">-</button>
+                                    <button type="button" onclick="keypadInsert('*')" class="py-2 rounded bg-white dark:bg-slate-600 font-bold shadow-sm hover:bg-slate-200 dark:hover:bg-slate-500">×</button>
+                                    <button type="button" onclick="keypadInsert('/')" class="py-2 rounded bg-white dark:bg-slate-600 font-bold shadow-sm hover:bg-slate-200 dark:hover:bg-slate-500">÷</button>
+                                    <button type="button" onclick="keypadInsert('x')" class="py-2 rounded bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 font-bold shadow-sm">x</button>
+                                    <button type="button" onclick="keypadInsert('=')" class="py-2 rounded bg-white dark:bg-slate-600 font-bold shadow-sm hover:bg-slate-200 dark:hover:bg-slate-500">=</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STAGE 4: Final Substitution Verification -->
+                    <div id="stage-4-container" class="hidden space-y-4">
+                        <div class="flex items-center space-x-2 text-emerald-600 dark:text-emerald-400">
+                            <span class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">✓</span>
+                            <h3 class="font-bold text-lg">Verification & Substitution</h3>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">You solved the equation! Substitute your answer back into the original equation to verify:</p>
+                        <div id="substitution-verification-box" class="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl text-sm font-mono-math space-y-2">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Feedback Message Box -->
+                    <div id="feedback-alert" class="hidden p-4 rounded-xl text-sm border transition-all">
+                        <div class="flex items-start space-x-3">
+                            <span id="feedback-icon" class="text-xl"></span>
+                            <div id="feedback-text" class="space-y-1 font-medium"></div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                        <div class="flex space-x-2">
+                            <button id="hint-btn" onclick="requestHint()" class="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 rounded-xl text-sm font-semibold transition">
+                                💡 Request Hint
+                            </button>
+                            <button id="solution-btn" onclick="revealSolution()" class="hidden px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200 rounded-xl text-sm font-semibold transition">
+                                👁️ Show Solution
+                            </button>
+                        </div>
+
+                        <div class="flex space-x-2">
+                            <button id="check-step-btn" onclick="submitCurrentStep()" class="px-6 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md transition transform active:scale-95">
+                                Check Step ✓
+                            </button>
+                            <button id="next-question-btn" onclick="advanceToNextQuestion()" class="hidden px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition transform active:scale-95">
+                                Next Question ➔
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Right 1 Column: Working History Panel & Controls -->
+            <div class="space-y-6">
+
+                <!-- Working History Panel -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center justify-between mb-4 border-b pb-3 border-slate-100 dark:border-slate-700">
+                        <h3 class="font-bold text-slate-700 dark:text-slate-200 flex items-center space-x-2">
+                            <span>📜</span>
+                            <span>Working Panel</span>
+                        </h3>
+                        <span id="working-step-count" class="text-xs text-slate-400">0 steps completed</span>
+                    </div>
+
+                    <!-- Steps Timeline -->
+                    <div id="working-history-list" class="space-y-3 font-mono-math text-sm">
+                        <!-- Step items rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Helper & Navigation Controls -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-200 dark:border-slate-700 space-y-3">
+                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Practice Controls</h4>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="skipQuestion()" class="py-2 px-3 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300 transition">
+                            ⏩ Skip Question
+                        </button>
+                        <button onclick="finishSessionEarly()" class="py-2 px-3 text-xs font-semibold rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-900/20 dark:text-rose-400 transition">
+                            🏁 Finish Practice
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- SCREEN 3: Practice Session Summary & Printable Report -->
+        <section id="screen-summary" class="hidden space-y-8 max-w-4xl mx-auto my-6">
+
+            <!-- Summary Header Card -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700 text-center relative overflow-hidden">
+                <div class="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
+                    🏆
+                </div>
+                <h2 class="text-3xl font-extrabold mb-1">Practice Session Complete!</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">Here is a detailed report of your step-by-step algebra performance.</p>
+
+                <!-- Student Metadata Banner -->
+                <div class="mt-6 inline-flex flex-wrap items-center justify-center gap-4 bg-slate-100 dark:bg-slate-700/50 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-600 text-sm">
+                    <div><span class="text-slate-400">Name:</span> <strong id="summary-student-name">-</strong></div>
+                    <div class="h-4 w-px bg-slate-300 dark:bg-slate-600"></div>
+                    <div><span class="text-slate-400">Class:</span> <strong id="summary-student-class">-</strong></div>
+                    <div class="h-4 w-px bg-slate-300 dark:bg-slate-600"></div>
+                    <div><span class="text-slate-400">Roll No:</span> <strong id="summary-student-roll">-</strong></div>
+                    <div class="h-4 w-px bg-slate-300 dark:bg-slate-600"></div>
+                    <div><span class="text-slate-400">Date:</span> <strong id="summary-date">-</strong></div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-400 uppercase">Equations Solved</div>
+                    <div id="summary-stat-solved" class="text-3xl font-black text-brand-600 dark:text-brand-400 mt-1">0/10</div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-400 uppercase">First-Try Accuracy</div>
+                    <div id="summary-stat-accuracy" class="text-3xl font-black text-emerald-600 dark:text-emerald-400 mt-1">0%</div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-400 uppercase">Total Score</div>
+                    <div id="summary-stat-score" class="text-3xl font-black text-amber-500 mt-1">0 pts</div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-400 uppercase">Time Spent</div>
+                    <div id="summary-stat-time" class="text-3xl font-black text-slate-700 dark:text-slate-200 mt-1">00:00</div>
+                </div>
+            </div>
+
+            <!-- Detailed Breakdown Table -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <div class="p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700">
+                    <h3 class="font-bold text-lg">Itemized Question Breakdown</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 dark:bg-slate-700/50 text-slate-400 uppercase text-[11px] font-bold border-b border-slate-200 dark:border-slate-700">
+                                <th class="py-3 px-4">#</th>
+                                <th class="py-3 px-4">Equation</th>
+                                <th class="py-3 px-4">Family</th>
+                                <th class="py-3 px-4">Solution</th>
+                                <th class="py-3 px-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary-table-body" class="divide-y divide-slate-100 dark:divide-slate-700 font-mono-math">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-4 no-print">
+                <button onclick="window.print()" class="px-6 py-3 bg-slate-800 hover:bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-800 dark:hover:bg-white font-bold rounded-xl shadow-md transition">
+                    🖨️ Print / Save PDF Report
+                </button>
+                <button onclick="exportTeacherJSON()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md transition">
+                    📥 Export Teacher Data (JSON)
+                </button>
+                <button onclick="restartNewSession()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition">
+                    🔄 Start New Session
+                </button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        /**
+         * Global Application State Object
+         */
+        const AppState = {
+            student: {
+                name: '',
+                className: '',
+                rollNo: '',
+                difficulty: 'medium'
+            },
+            session: {
+                questions: [],
+                currentIndex: 0,
+                score: 0,
+                startTime: null,
+                timerInterval: null,
+                elapsedSeconds: 0,
+                totalFirstTrySteps: 0,
+                totalStepsAttempted: 0
+            },
+            currentQuestion: null,
+            currentStage: 0,
+            selectedOpChoice: null,
+            attemptsOnCurrentStep: 0,
+            workingHistory: []
+        };
+
+        /**
+         * Toggle Light / Dark / High Contrast Themes
+         */
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme') || 'light';
+            const nextTheme = currentTheme === 'light' ? 'dark' : (currentTheme === 'dark' ? 'contrast' : 'light');
+            html.setAttribute('data-theme', nextTheme);
+            if (nextTheme === 'dark') {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+        }
+
+        /**
+         * Handle Registration Form Submission
+         */
+        function handleRegistration(event) {
+            event.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const className = document.getElementById('reg-class').value.trim();
+            const rollNo = document.getElementById('reg-roll').value.trim();
+            const difficulty = document.getElementById('reg-difficulty').value;
+
+            if (!name || !className || !rollNo) {
+                showFeedback('Please fill in all required registration fields.', 'rose');
+                return;
+            }
+
+            AppState.student = { name, className, rollNo, difficulty };
+
+            // Update Header Navigation Badge
+            document.getElementById('nav-student-name').textContent = name;
+            document.getElementById('nav-student-class').textContent = `${className} / #${rollNo}`;
+            document.getElementById('header-student-badge').classList.remove('hidden');
+            document.getElementById('header-stats').classList.remove('hidden');
+            document.getElementById('restart-btn').classList.remove('hidden');
+
+            // Transition from Registration to Practice View
+            document.getElementById('screen-registration').classList.add('hidden');
+            document.getElementById('screen-practice').classList.remove('hidden');
+
+            // Generate Equations & Launch Session
+            startPracticeSession();
+        }
+
+        /**
+         * Helper to return random integer between min and max inclusive
+         */
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        /**
+         * Equation Generator Engine (Family A, B, C, D)
+         */
+        function generateQuestions(difficulty, count = 10) {
+            const questions = [];
+
+            for (let i = 0; i < count; i++) {
+                const familyType = getRandomInt(1, 4); // 1: A, 2: B, 3: C, 4: D
+                let q = null;
+
+                if (familyType === 1) {
+                    // Family A — Two-term, one side (e.g. ax + b = c or ax - b = c)
+                    const isPlus = Math.random() > 0.5;
+                    const a = getRandomInt(2, 8);
+                    const x = getRandomInt(2, 9);
+                    const b = getRandomInt(3, 15);
+                    const c = isPlus ? (a * x + b) : (a * x - b);
+                    const opSymbol = isPlus ? '+' : '−';
+                    const rawStr = `${a}x ${opSymbol} ${b} = ${c}`;
+
+                    const step1TargetL = `${a}x`;
+                    const step1TargetR = `${isPlus ? c - b : c + b}`;
+
+                    q = {
+                        title: 'Family A — Two-term, one side',
+                        rawStr,
+                        mathHtml: `<span class="font-bold font-mono-math">${rawStr}</span>`,
+                        solution: x,
+                        steps: [
+                            {
+                                type: 'CHOICE',
+                                options: [
+                                    { text: `${isPlus ? 'Subtract' : 'Add'} ${b} ${isPlus ? 'from' : 'to'} both sides`, isCorrect: true },
+                                    { text: `Divide both sides by ${a}`, isCorrect: false },
+                                    { text: `Multiply both sides by ${b}`, isCorrect: false },
+                                    { text: `Subtract ${a} from both sides`, isCorrect: false }
+                                ],
+                                explanation: `To undo ${isPlus ? 'adding' : 'subtracting'} ${b}, perform the inverse operation (${isPlus ? 'subtract' : 'add'} ${b}) on both sides first.`
+                            },
+                            {
+                                type: 'INPUT',
+                                opText: `${isPlus ? 'Subtract' : 'Add'} ${b} on both sides`,
+                                targetLhs: step1TargetL,
+                                targetRhs: step1TargetR,
+                                expectedStr: `${step1TargetL} = ${step1TargetR}`
+                            },
+                            {
+                                type: 'CHOICE',
+                                options: [
+                                    { text: `Divide both sides by ${a}`, isCorrect: true },
+                                    { text: `Multiply both sides by ${a}`, isCorrect: false },
+                                    { text: `Subtract ${a} from both sides`, isCorrect: false }
+                                ],
+                                explanation: `Divide both sides by coefficient ${a} to isolate x.`
+                            },
+                            {
+                                type: 'INPUT',
+                                opText: `Divide both sides by ${a}`,
+                                targetLhs: 'x',
+                                targetRhs: `${x}`,
+                                expectedStr: `x = ${x}`
+                            }
+                        ]
+                    };
+                } else if (familyType === 2) {
+                    // Family B — Variable on the right (e.g. c = ax + b)
+                    const isPlus = Math.random() > 0.5;
+                    const a = getRandomInt(2, 7);
+                    const x = getRandomInt(2, 9);
+                    const b = getRandomInt(2, 12);
+                    const c = isPlus ? (a * x + b) : (a * x - b);
+                    const opSymbol = isPlus ? '+' : '−';
+                    const rawStr = `${c} = ${a}x ${opSymbol} ${b}`;
+
+                    const step1Rhs = `${a}x`;
+                    const step1Lhs = `${isPlus ? c - b : c + b}`;
+
+                    q = {
+                        title: 'Family B — Variable on the right',
+                        rawStr,
+                        mathHtml: `<span class="font-bold font-mono-math">${rawStr}</span>`,
+                        solution: x,
+                        steps: [
+                            {
+                                type: 'CHOICE',
+                                options: [
+                                    { text: `${isPlus ? 'Subtract' : 'Add'} ${b} ${isPlus ? 'from' : 'to'} both sides`, isCorrect: true },
+                                    { text: `Divide both sides by ${a}`, isCorrect: false },
+                                    { text: `Add ${c} to both sides`, isCorrect: false }
+                                ],
+                                explanation: `Transpose constant term ${b} first before isolating coefficient ${a}.`
+                            },
+                            {
+                                type: 'INPUT',
+                                opText: `${isPlus ? 'Subtract' : 'Add'} ${b} on both sides`,
+                                targetLhs: step1Lhs,
+                                targetRhs: step1Rhs,
+                                expectedStr: `${step1Lhs} = ${step1Rhs}`
+                            },
+                            {
+                                type: 'CHOICE',
+                                options: [
+                                    { text: `Divide both sides by ${a}`, isCorrect: true },
+                                    { text: `Subtract ${a} from both sides`, isCorrect: false }
+                                ],
+                                explanation: `Divide both sides by ${a} to leave x isolated.`
+                            },
+                            {
+                                type: 'INPUT',
+                                opText: `Divide both sides by ${a}`,
+                                targetLhs: `${x}`,
+                                targetRhs: 'x',
+                                expectedStr: `x = ${x}`
+                            }
+                        ]
+                    };
+                } else if (familyType === 3) {
+                    // Family C — Bracket form (e.g. a(bx + c) = d or a(x + b) = c)
+                    const cSubtype = getRandomInt(1, 3);
+
+                    if (cSubtype === 1) {
+                        // Form 1: a(x + b) = c -> Divide by a -> x + b = c/a -> Subtract b -> x
+                        const a = getRandomInt(2, 5);
+                        const x = getRandomInt(2, 8);
+                        const b = getRandomInt(1, 6);
+                        const c = a * (x + b);
+                        const rawStr = `${a}(x + ${b}) = ${c}`;
+
+                        q = {
+                            title: 'Family C — Bracket form',
+                            rawStr,
+                            mathHtml: `<span class="font-bold font-mono-math">${rawStr}</span>`,
+                            solution: x,
+                            steps: [
+                                {
+                                    type: 'CHOICE',
+                                    options: [
+                                        { text: `Divide both sides by ${a}`, isCorrect: true },
+                                        { text: `Subtract ${b} from both sides`, isCorrect: false },
+                                        { text: `Multiply both sides by ${a}`, isCorrect: false },
+                                        { text: `Subtract ${a} from both sides`, isCorrect: false }
+                                    ],
+                                    explanation: `Divide both sides by ${a} first to clear the outer multiplier before removing constant terms.`
+                                },
+                                {
+                                    type: 'INPUT',
+                                    opText: `Divide both sides by ${a}`,
+                                    targetLhs: `x + ${b}`,
+                                    targetRhs: `${c / a}`,
+                                    expectedStr: `x + ${b} = ${c / a}`
+                                },
+                                {
+                                    type: 'CHOICE',
+                                    options: [
+                                        { text: `Subtract ${b} from both sides`, isCorrect: true },
+                                        { text: `Divide both sides by ${b}`, isCorrect: false },
+                                        { text: `Add ${b} to both sides`, isCorrect: false }
+                                    ],
+                                    explanation: `Subtract ${b} from both sides to isolate x.`
+                                },
+                                {
+                                    type: 'INPUT',
+                                    opText: `Subtract ${b} from both sides`,
+                                    targetLhs: 'x',
+                                    targetRhs: `${x}`,
+                                    expectedStr: `x = ${x}`
+                                }
+                            ]
+                        };
+                    } else if (cSubtype === 2) {
+                        // Form 2: a(x - b) = c -> Divide by a -> x - b = c/a -> Add b -> x
+                        const a = getRandomInt(2, 5);
+                        const x = getRandomInt(5, 12);
+                        const b = getRandomInt(1, 4);
+                        const c = a * (x - b);
+                        const rawStr = `${a}(x − ${b}) = ${c}`;
+
+                        q = {
+                            title: 'Family C — Bracket form',
+                            rawStr,
+                            mathHtml: `<span class="font-bold font-mono-math">${rawStr}</span>`,
+                            solution: x,
+                            steps: [
+                                {
+                                    type: 'CHOICE',
+                                    options: [
+                                        { text: `Divide both sides by ${a}`, isCorrect: true },
+                                        { text: `Add ${b} to both sides`, isCorrect: false },
+                                        { text: `Multiply both sides by ${a}`, isCorrect: false },
+                                        { text: `Subtract ${a} from both sides`, isCorrect: false }
+                                    ],
+                                    explanation: `Divide both sides by ${a} first to remove the outer factor.`
+                                },
+                                {
+                                    type: 'INPUT',
+                                    opText: `Divide both sides by ${a}`,
+                                    targetLhs: `x - ${b}`,
+                                    targetRhs: `${c / a}`,
+                                    expectedStr: `x - ${b} = ${c / a}`
+                                },
+                                {
+                                    type: 'CHOICE',
+                                    options: [
+                                        { text: `Add ${b} to both sides`, isCorrect: true },
+                                        { text: `Subtract ${b} from both sides`, isCorrect: false },
+                                        { text: `Divide both sides by ${b}`, isCorrect: false }
+                                    ],
+                                    explanation: `Add ${b} to both sides to solve for x.`
+                                },
+                                {
+                                    type: 'INPUT',
+                                    opText: `Add ${b} to both sides`,
+                                    targetLhs: 'x',
+                                    targetRhs: `${x}`,
+                                    expectedStr: `x = ${x}`
+                                }
+                            ]
+                        };
+                    } else {
+                        // Form 3: a(bx + c) = d -> Divide by a -> bx + c = d/a -> Subtract c -> bx = ... -> Divide by b -> x
+                        const a = getRandomInt(2, 4);
+                        const b = getRandomInt(2, 4);
+                        const x = getRandomInt(2, 6);
+                        const c = getRandomInt(1, 5);
+                        const inner = b * x + c;
+                        const d = a * inner;
+                        const rawStr = `${a}(${b}x + ${c}) = ${d}`;
+
+                        q = {
+                            title: 'Family C — Bracket form',
+                            rawStr,
+                            mathHtml: `<span class="font-bold font-mono-math">${rawStr}</span>`,
+                            solution: x,
+                            steps: [
+                                {
+                                    type: 'CHOICE',
+                                    options: [
+                                        { text: `Divide both sides by ${a}`, isCorrect: true },
+                                        { text: `Subtract ${c} from both sides`, isCorrect: false },
+                                        { text: `Divide both sides by ${b}`, isCorrect: false },
+                                        { text: `Multiply both sides by ${a}`, isCorrect: false }
+                                    ],
+                                    explanation: `Divide both sides by ${a} first to clear the factor outside the bracket without expanding.`
+                                },
+                                {
+                                    type: 'INPUT',
+                                    opText: `Divide both sides by ${a}`,
+                                    targetLhs: `${b}x + ${c}`,
+                                    targetRhs: `${inner}`,
+                                    expectedStr: `${b}x + ${c} = ${inner}`
+                                },
+                                {
+                                    type: 'CHOICE',
+                                    options: [
+                                        { text: `Subtract ${c} from both sides`, isCorrect: true },
+                                        { text: `Divide both sides by ${b}`, isCorrect: false },
+                                        { text: `Add ${c} to both sides`, isCorrect: false }
+                                    ],
+                                    explanation: `Subtract constant ${c} from both sides.`
+                                },
+                                {
+                                    type: 'INPUT',
+                                    opText: `Subtract ${c} from both sides`,
+                                    targetLhs: `${b}x`,
+                                    targetRhs: `${b * x}`,
+                                    expectedStr: `${b}x = ${b * x}`
+                                },
+                                {
+                                    type: 'CHOICE',
+                                    options: [
+                                        { text: `Divide both sides by ${b}`, isCorrect: true },
+                                        { text: `Subtract ${b} from both sides`, isCorrect: false }
+                                    ],
+                                    explanation: `Divide both sides by coefficient ${b} to isolate x.`
+                                },
+                                {
+                                    type: 'INPUT',
+                                    opText: `Divide both sides by ${b}`,
+                                    targetLhs: 'x',
+                                    targetRhs: `${x}`,
+                                    expectedStr: `x = ${x}`
+                                }
+                            ]
+                        };
+                    }
+                } else {
+                    // Family D — Fraction form (e.g. (ax + b) / c = d)
+                    const a = getRandomInt(2, 4);
+                    const x = getRandomInt(2, 7);
+                    const b = getRandomInt(2, 8);
+                    const c = getRandomInt(2, 5);
+                    const numerator = a * x + b;
+                    const d = Math.ceil(numerator / c);
+                    const adjustedB = d * c - a * x; // Ensure clean integer
+                    const rawStr = `(${a}x + ${adjustedB}) / ${c} = ${d}`;
+
+                    q = {
+                        title: 'Family D — Fraction form',
+                        rawStr,
+                        mathHtml: formatEquationToHtml(rawStr),
+                        solution: x,
+                        steps: [
+                            {
+                                type: 'CHOICE',
+                                options: [
+                                    { text: `Remove denominator by multiplying both sides by ${c}`, isCorrect: true },
+                                    { text: `Subtract ${adjustedB} from both sides`, isCorrect: false },
+                                    { text: `Divide both sides by ${a}`, isCorrect: false }
+                                ],
+                                explanation: `Clear the outer denominator ${c} by multiplying both sides first.`
+                            },
+                            {
+                                type: 'INPUT',
+                                opText: `Multiply both sides by ${c}`,
+                                targetLhs: `${a}x + ${adjustedB}`,
+                                targetRhs: `${d * c}`,
+                                expectedStr: `${a}x + ${adjustedB} = ${d * c}`
+                            },
+                            {
+                                type: 'CHOICE',
+                                options: [
+                                    { text: `Subtract ${adjustedB} from both sides`, isCorrect: true },
+                                    { text: `Divide both sides by ${a}`, isCorrect: false }
+                                ],
+                                explanation: `Subtract constant ${adjustedB} from both sides.`
+                            },
+                            {
+                                type: 'INPUT',
+                                opText: `Subtract ${adjustedB} from both sides`,
+                                targetLhs: `${a}x`,
+                                targetRhs: `${d * c - adjustedB}`,
+                                expectedStr: `${a}x = ${d * c - adjustedB}`
+                            },
+                            {
+                                type: 'CHOICE',
+                                options: [
+                                    { text: `Divide both sides by ${a}`, isCorrect: true },
+                                    { text: `Subtract ${a} from both sides`, isCorrect: false }
+                                ],
+                                explanation: `Divide by coefficient ${a} to isolate x.`
+                            },
+                            {
+                                type: 'INPUT',
+                                opText: `Divide both sides by ${a}`,
+                                targetLhs: 'x',
+                                targetRhs: `${x}`,
+                                expectedStr: `x = ${x}`
+                            }
+                        ]
+                    };
+                }
+
+                questions.push(q);
+            }
+
+            return questions;
+        }
+
+        /**
+         * Start Practice Session & Timer
+         */
+        function startPracticeSession() {
+            AppState.session.questions = generateQuestions(AppState.student.difficulty, 10);
+            AppState.session.currentIndex = 0;
+            AppState.session.score = 0;
+            AppState.session.elapsedSeconds = 0;
+            AppState.session.totalFirstTrySteps = 0;
+            AppState.session.totalStepsAttempted = 0;
+
+            if (AppState.session.timerInterval) clearInterval(AppState.session.timerInterval);
+            AppState.session.startTime = Date.now();
+            AppState.session.timerInterval = setInterval(() => {
+                AppState.session.elapsedSeconds++;
+                const mins = String(Math.floor(AppState.session.elapsedSeconds / 60)).padStart(2, '0');
+                const secs = String(AppState.session.elapsedSeconds % 60).padStart(2, '0');
+                const timerEl = document.getElementById('nav-timer');
+                if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+            }, 1000);
+
+            loadQuestion(0);
+        }
+
+        /**
+         * Format Equation to Styled Math HTML
+         */
+        function formatEquationToHtml(rawEq) {
+            if (!rawEq) return '';
+            const fracMatch = rawEq.match(/^\(([^)]+)\)\s*\/\s*(\d+)\s*=\s*(.+)$/);
+            if (fracMatch) {
+                return `
+                    <div class="inline-flex items-center font-mono-math">
+                        <div class="math-fraction">
+                            <span class="math-numerator">${fracMatch[1].trim()}</span>
+                            <span class="math-denominator">${fracMatch[2].trim()}</span>
+                        </div>
+                        <span class="ml-2 font-bold">= ${fracMatch[3].trim()}</span>
+                    </div>
+                `;
+            }
+            return `<span class="font-bold font-mono-math">${rawEq}</span>`;
+        }
+
+        /**
+         * Render Transformed Equations Stack directly below original equation
+         */
+        function renderWorkingStack() {
+            const stackContainer = document.getElementById('working-steps-stack');
+            const countBadge = document.getElementById('stack-count-badge');
+            if (!stackContainer) return;
+
+            stackContainer.innerHTML = '';
+            const steps = AppState.workingHistory.filter(h => !h.isOriginal);
+
+            if (countBadge) {
+                countBadge.textContent = `${steps.length} transformation${steps.length === 1 ? '' : 's'}`;
+            }
+
+            if (steps.length === 0) {
+                stackContainer.innerHTML = `
+                    <div class="text-center py-4 px-4 border border-dashed border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-400">
+                        Transformed equations will appear here step-by-step as you solve...
+                    </div>
+                `;
+                return;
+            }
+
+            steps.forEach((step, idx) => {
+                const isLatest = idx === steps.length - 1;
+                const stepNum = idx + 1;
+
+                const div = document.createElement('div');
+                div.className = `p-3.5 sm:p-4 rounded-xl transition-all duration-300 ${
+                    isLatest 
+                        ? 'bg-brand-50/90 dark:bg-brand-950/40 border-2 border-brand-500 shadow-md animate-step-enter' 
+                        : 'bg-slate-50 dark:bg-slate-700/40 border border-slate-200 dark:border-slate-600'
+                }`;
+
+                const htmlEq = step.equationStr ? formatEquationToHtml(step.equationStr) : `<span class="font-bold">${step.text}</span>`;
+
+                div.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/60 dark:border-slate-600/60 pb-2 mb-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-0.5 text-[10px] font-extrabold uppercase rounded-full ${
+                                isLatest ? 'bg-brand-600 text-white' : 'bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300'
+                            }">
+                                Step ${stepNum}
+                            </span>
+                            <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">
+                                ${step.actionText || 'Operation Performed'}
+                            </span>
+                        </div>
+                        ${isLatest ? '<span class="text-[10px] font-bold text-brand-600 dark:text-brand-300 uppercase tracking-wider bg-brand-100 dark:bg-brand-900/60 px-2 py-0.5 rounded">Active State</span>' : ''}
+                    </div>
+                    <div class="text-xl sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 text-center py-1">
+                        ${htmlEq}
+                    </div>
+                `;
+
+                stackContainer.appendChild(div);
+            });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        /**
+         * Load Active Question Index
+         */
+        function loadQuestion(index) {
+            if (index >= AppState.session.questions.length) {
+                finishSession();
+                return;
+            }
+
+            AppState.session.currentIndex = index;
+            AppState.currentQuestion = AppState.session.questions[index];
+            AppState.currentStage = 0;
+            AppState.workingHistory = [
+                { text: `Original: ${AppState.currentQuestion.rawStr}`, isOriginal: true, equationStr: AppState.currentQuestion.rawStr }
+            ];
+            AppState.attemptsOnCurrentStep = 0;
+
+            document.getElementById('nav-progress').textContent = `Q ${index + 1}/10`;
+            document.getElementById('nav-score').textContent = `${AppState.session.score} pts`;
+
+            document.getElementById('equation-family-tag').textContent = AppState.currentQuestion.title;
+            document.getElementById('equation-difficulty-tag').textContent = AppState.student.difficulty.toUpperCase();
+            document.getElementById('math-equation-display').innerHTML = AppState.currentQuestion.mathHtml;
+
+            hideFeedback();
+            renderWorkingStack();
+            renderWorkingHistory();
+            renderCurrentStepStage();
+        }
+
+        /**
+         * Render Active Stage Options / Inputs
+         */
+        function renderCurrentStepStage() {
+            const q = AppState.currentQuestion;
+            const step = q.steps[AppState.currentStage];
+
+            if (!step) {
+                renderStage4Verification();
+                return;
+            }
+
+            const s1 = document.getElementById('stage-1-container');
+            const s2 = document.getElementById('stage-2-container');
+            const s4 = document.getElementById('stage-4-container');
+            const checkBtn = document.getElementById('check-step-btn');
+            const nextBtn = document.getElementById('next-question-btn');
+            const solutionBtn = document.getElementById('solution-btn');
+
+            s4.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            solutionBtn.classList.add('hidden');
+            checkBtn.classList.remove('hidden');
+
+            if (step.type === 'CHOICE') {
+                s1.classList.remove('hidden');
+                s2.classList.add('hidden');
+
+                const optionsContainer = document.getElementById('stage-1-options');
+                optionsContainer.innerHTML = '';
+
+                step.options.forEach((opt) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'w-full text-left p-3.5 rounded-xl border border-slate-200 dark:border-slate-600 hover:border-brand-500 dark:hover:border-brand-400 bg-white dark:bg-slate-700 font-medium text-sm transition flex items-center justify-between group';
+                    btn.onclick = () => {
+                        AppState.selectedOpChoice = opt;
+                        Array.from(optionsContainer.children).forEach(c => {
+                            c.classList.remove('ring-2', 'ring-brand-500', 'bg-brand-50', 'dark:bg-brand-900/30');
+                        });
+                        btn.classList.add('ring-2', 'ring-brand-500', 'bg-brand-50', 'dark:bg-brand-900/30');
+                    };
+                    btn.innerHTML = `
+                        <span>${opt.text}</span>
+                        <span class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-500 flex items-center justify-center text-xs group-hover:border-brand-500">✓</span>
+                    `;
+                    optionsContainer.appendChild(btn);
+                });
+
+            } else if (step.type === 'INPUT') {
+                s1.classList.add('hidden');
+                s2.classList.remove('hidden');
+
+                document.getElementById('step-number-badge').textContent = Math.floor(AppState.currentStage / 2) + 1;
+                document.getElementById('stage-2-title').textContent = `Perform Operation (${step.opText})`;
+                document.getElementById('stage-2-prompt').textContent = `Perform "${step.opText}" and enter the resulting equation below:`;
+
+                const input = document.getElementById('intermediate-step-input');
+                input.value = '';
+                input.placeholder = `e.g. ${step.expectedStr}`;
+                input.focus();
+            }
+        }
+
+        /**
+         * Algebra Step Validator
+         */
+        function validateEquationStep(inputStr, targetLhs, targetRhs) {
+            if (!inputStr || !inputStr.includes('=')) {
+                return { isValid: false, diagnostic: "Please include an '=' sign in your equation (e.g. 3x = 15)." };
+            }
+
+            const clean = str => str.replace(/\s+/g, '').toLowerCase().replace(/÷/g, '/').replace(/×/g, '*');
+            
+            const parts = inputStr.split('=');
+            if (parts.length !== 2) {
+                return { isValid: false, diagnostic: "Your equation should have exactly one '=' sign." };
+            }
+
+            const lhs = clean(parts[0]);
+            const rhs = clean(parts[1]);
+
+            const targetL = clean(targetLhs);
+            const targetR = clean(targetRhs);
+
+            if ((lhs === targetL && rhs === targetR) || (lhs === targetR && rhs === targetL)) {
+                return { isValid: true };
+            }
+
+            return { 
+                isValid: false, 
+                diagnostic: `Expected an equation equivalent to "${targetLhs} = ${targetRhs}". Double check your arithmetic!` 
+            };
+        }
+
+        /**
+         * Submit Active Step for Evaluation
+         */
+        function submitCurrentStep() {
+            const stepObj = AppState.currentQuestion.steps[AppState.currentStage];
+            AppState.session.totalStepsAttempted++;
+            AppState.attemptsOnCurrentStep++;
+
+            if (stepObj.type === 'CHOICE') {
+                if (!AppState.selectedOpChoice) {
+                    showFeedback('⚠️ Please select an operation choice first.', 'amber');
+                    return;
+                }
+
+                if (AppState.selectedOpChoice.isCorrect) {
+                    if (AppState.attemptsOnCurrentStep === 1) AppState.session.totalFirstTrySteps++;
+                    AppState.session.score += 50;
+                    showFeedback(`✅ Correct! ${stepObj.explanation}`, 'emerald');
+
+                    AppState.currentStage++;
+                    AppState.selectedOpChoice = null;
+                    AppState.attemptsOnCurrentStep = 0;
+                    setTimeout(() => {
+                        hideFeedback();
+                        renderCurrentStepStage();
+                    }, 1200);
+
+                } else {
+                    showFeedback(`❌ Incorrect choice. Think about undoing the outer operation first!`, 'rose');
+                    if (AppState.attemptsOnCurrentStep >= 2) {
+                        document.getElementById('solution-btn').classList.remove('hidden');
+                    }
+                }
+
+            } else if (stepObj.type === 'INPUT') {
+                const inputVal = document.getElementById('intermediate-step-input').value.trim();
+                const res = validateEquationStep(inputVal, stepObj.targetLhs, stepObj.targetRhs);
+
+                if (res.isValid) {
+                    if (AppState.attemptsOnCurrentStep === 1) AppState.session.totalFirstTrySteps++;
+                    AppState.session.score += 50;
+                    showFeedback(`✅ Excellent step! "${inputVal}" is mathematically correct.`, 'emerald');
+
+                    AppState.workingHistory.push({
+                        text: `${stepObj.opText} ➔ ${inputVal}`,
+                        isOriginal: false,
+                        actionText: stepObj.opText,
+                        equationStr: inputVal,
+                        isVerified: true
+                    });
+                    
+                    renderWorkingStack();
+                    renderWorkingHistory();
+
+                    AppState.currentStage++;
+                    AppState.attemptsOnCurrentStep = 0;
+                    setTimeout(() => {
+                        hideFeedback();
+                        renderCurrentStepStage();
+                    }, 1200);
+
+                } else {
+                    showFeedback(`❌ ${res.diagnostic}`, 'rose');
+                    if (AppState.attemptsOnCurrentStep >= 2) {
+                        document.getElementById('solution-btn').classList.remove('hidden');
+                    }
+                }
+            }
+        }
+
+        /**
+         * Stage 4: Substitution Verification
+         */
+        function renderStage4Verification() {
+            document.getElementById('stage-1-container').classList.add('hidden');
+            document.getElementById('stage-2-container').classList.add('hidden');
+            document.getElementById('stage-4-container').classList.remove('hidden');
+
+            document.getElementById('check-step-btn').classList.add('hidden');
+            document.getElementById('next-question-btn').classList.remove('hidden');
+
+            const xSol = AppState.currentQuestion.solution;
+
+            const box = document.getElementById('substitution-verification-box');
+            box.innerHTML = `
+                <div>Original Equation: <strong>${AppState.currentQuestion.rawStr}</strong></div>
+                <div>Substitute x = ${xSol}:</div>
+                <div class="text-emerald-700 dark:text-emerald-300 font-bold">✓ Left Hand Side equals Right Hand Side!</div>
+            `;
+            AppState.session.score += 100;
+            document.getElementById('nav-score').textContent = `${AppState.session.score} pts`;
+        }
+
+        // Virtual Keypad Helpers
+        function keypadInsert(char) {
+            const input = document.getElementById('intermediate-step-input');
+            if (input) {
+                input.value += char;
+                input.focus();
+            }
+        }
+
+        function clearStepInput() {
+            const input = document.getElementById('intermediate-step-input');
+            if (input) input.value = '';
+        }
+
+        // Hint Request
+        function requestHint() {
+            const stepObj = AppState.currentQuestion.steps[AppState.currentStage];
+            if (!stepObj) return;
+            AppState.session.score = Math.max(0, AppState.session.score - 10);
+            document.getElementById('nav-score').textContent = `${AppState.session.score} pts`;
+
+            if (stepObj.type === 'CHOICE') {
+                showFeedback(`💡 Hint: Look for the operation that cancels the constant term or clears the denominator!`, 'amber');
+            } else {
+                showFeedback(`💡 Hint: Enter your simplified equation in the form "${stepObj.expectedStr}".`, 'amber');
+            }
+        }
+
+        // Reveal Solution
+        function revealSolution() {
+            const stepObj = AppState.currentQuestion.steps[AppState.currentStage];
+            if (!stepObj) return;
+            showFeedback(`👁️ Solution for this step: ${stepObj.expectedStr || stepObj.explanation}`, 'brand');
+        }
+
+        // Advance to Next Question
+        function advanceToNextQuestion() {
+            loadQuestion(AppState.session.currentIndex + 1);
+        }
+
+        // Skip Question
+        function skipQuestion() {
+            AppState.session.score = Math.max(0, AppState.session.score - 20);
+            loadQuestion(AppState.session.currentIndex + 1);
+        }
+
+        // Render Working History Timeline
+        function renderWorkingHistory() {
+            const container = document.getElementById('working-history-list');
+            const countLabel = document.getElementById('working-step-count');
+            if (!container) return;
+            container.innerHTML = '';
+
+            countLabel.textContent = `${AppState.workingHistory.length - 1} steps completed`;
+
+            AppState.workingHistory.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = 'p-2.5 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 flex items-center justify-between text-xs';
+                div.innerHTML = `
+                    <span class="font-bold text-slate-700 dark:text-slate-200">${item.text}</span>
+                    <span class="text-emerald-500 font-bold">✓</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Show Feedback Banner
+        function showFeedback(message, color = 'emerald') {
+            const alert = document.getElementById('feedback-alert');
+            const text = document.getElementById('feedback-text');
+            if (!alert || !text) return;
+
+            alert.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-800', 'bg-rose-50', 'border-rose-200', 'text-rose-800', 'bg-amber-50', 'border-amber-200', 'text-amber-800', 'bg-brand-50', 'border-brand-200', 'text-brand-800');
+
+            if (color === 'emerald') {
+                alert.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-800');
+            } else if (color === 'rose') {
+                alert.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-800');
+            } else if (color === 'brand') {
+                alert.classList.add('bg-brand-50', 'border-brand-200', 'text-brand-800');
+            } else {
+                alert.classList.add('bg-amber-50', 'border-amber-200', 'text-amber-800');
+            }
+
+            text.textContent = message;
+        }
+
+        function hideFeedback() {
+            const alert = document.getElementById('feedback-alert');
+            if (alert) alert.classList.add('hidden');
+        }
+
+        // Finish Practice Session & Show Printable Summary
+        function finishSession() {
+            if (AppState.session.timerInterval) clearInterval(AppState.session.timerInterval);
+
+            document.getElementById('screen-practice').classList.add('hidden');
+            document.getElementById('screen-summary').classList.remove('hidden');
+
+            document.getElementById('summary-student-name').textContent = AppState.student.name;
+            document.getElementById('summary-student-class').textContent = AppState.student.className;
+            document.getElementById('summary-student-roll').textContent = AppState.student.rollNo;
+            document.getElementById('summary-date').textContent = new Date().toLocaleDateString();
+
+            const solvedCount = AppState.session.currentIndex;
+            const accuracy = AppState.session.totalStepsAttempted > 0 
+                ? Math.round((AppState.session.totalFirstTrySteps / AppState.session.totalStepsAttempted) * 100) 
+                : 100;
+
+            document.getElementById('summary-stat-solved').textContent = `${solvedCount}/10`;
+            document.getElementById('summary-stat-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('summary-stat-score').textContent = `${AppState.session.score} pts`;
+
+            const mins = String(Math.floor(AppState.session.elapsedSeconds / 60)).padStart(2, '0');
+            const secs = String(AppState.session.elapsedSeconds % 60).padStart(2, '0');
+            document.getElementById('summary-stat-time').textContent = `${mins}:${secs}`;
+
+            const tbody = document.getElementById('summary-table-body');
+            tbody.innerHTML = '';
+
+            AppState.session.questions.forEach((q, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-slate-100 dark:border-slate-700';
+                const isCompleted = idx < AppState.session.currentIndex;
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-bold">${idx + 1}</td>
+                    <td class="py-3 px-4">${q.rawStr}</td>
+                    <td class="py-3 px-4 text-xs text-slate-500">${q.title}</td>
+                    <td class="py-3 px-4 font-bold text-brand-600">x = ${q.solution}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-1 rounded text-xs font-bold ${isCompleted ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'}">
+                            ${isCompleted ? 'Completed ✓' : 'Skipped'}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function finishSessionEarly() {
+            if (confirm('Are you sure you want to finish your practice session now?')) {
+                finishSession();
+            }
+        }
+
+        function confirmRestart() {
+            if (confirm('Restart session and edit student profile?')) {
+                location.reload();
+            }
+        }
+
+        function restartNewSession() {
+            document.getElementById('screen-summary').classList.add('hidden');
+            document.getElementById('screen-practice').classList.remove('hidden');
+            startPracticeSession();
+        }
+
+        // Export Teacher JSON
+        function exportTeacherJSON() {
+            const reportData = {
+                student: AppState.student,
+                sessionSummary: {
+                    score: AppState.session.score,
+                    elapsedSeconds: AppState.session.elapsedSeconds,
+                    totalFirstTrySteps: AppState.session.totalFirstTrySteps,
+                    totalStepsAttempted: AppState.session.totalStepsAttempted,
+                    completedAt: new Date().toISOString()
+                },
+                questions: AppState.session.questions.map(q => ({
+                    title: q.title,
+                    rawStr: q.rawStr,
+                    solution: q.solution
+                }))
+            };
+
+            const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Algebra_Report_${AppState.student.name.replace(/\s+/g, '_')}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
